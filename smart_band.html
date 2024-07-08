@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NFC Image Display</title>
+</head>
+<body>
+    <h1>NFC Image Display</h1>
+    <img id="image" src="image1.jpg" alt="NFC Image" width="300">
+    <script>
+        const imageList = [
+            'image1.jpg',
+            'image2.jpg',
+            // Add all your images
+        ];
+        let tapCount = 0;
+
+        if ('NDEFReader' in window) {
+            const nfcReader = new NDEFReader();
+
+            nfcReader.scan().then(() => {
+                nfcReader.onreading = event => {
+                    if (tapCount < imageList.length) {
+                        document.getElementById('image').src = imageList[tapCount];
+                        tapCount++;
+                    } else {
+                        tapCount = 0;
+                        document.getElementById('image').src = imageList[tapCount];
+                    }
+                };
+            }).catch(error => {
+                console.error('Error reading NFC tag:', error);
+            });
+        } else {
+            console.error('Web NFC is not supported on this browser.');
+        }
+    </script>
+</body>
+</html>
